@@ -1,4 +1,4 @@
-# RFC 7523
+# Apigee Edge Proxy demonstrating RFC 7523 Token Exchange
 
 This API Proxy bundle demonstrates token exchange - JWT for an opaque OAuth token as decribed by [RFC 7523](https://tools.ietf.org/html/rfc7523).
 
@@ -68,7 +68,6 @@ To provision the keys, the developer, the product, and the app, run the provisio
 
 ```
 tools/provisionKeysProxyProductDeveloperAndApp.sh   -o ORGNAME  -e ENVNAME
-
 ```
 
 Specify your organization name and environment name as appropriate.
@@ -76,13 +75,11 @@ Specify your organization name and environment name as appropriate.
 The output will finish something like:
 
 ```
-
 private key file: private-pkcs8-20161214-201107.pem
 public key file: public-20161214-201107.pem
 
 consumer key: ayBZRVAGlmG8BnbQ0YllkCywvi3Ko9wI
 consumer secret: m9cdAYxXtu3m7Nde
-
 ```
 
 
@@ -90,28 +87,25 @@ consumer secret: m9cdAYxXtu3m7Nde
 
 1. First, build the Java tool that generates the JWT:
 
-```
-cd tools/jwttool
-mvn clean install
-cd ../..
-
-```
+   ```
+   cd tools/jwttool
+   mvn clean install
+   cd ../..
+   ```
 
 2. then, run the wrapper script to generate a JWT:
 
-```
-tools/createJwt.sh -k PRIVATE_KEY_FILE  -i CONSUMER_KEY_HERE
-
-```
+   ```
+   tools/createJwt.sh -k PRIVATE_KEY_FILE  -i CONSUMER_KEY_HERE
+   ```
 
 The CONSUMER_KEY_HERE and the PRIVATE_KEY_FILE that you use here, must be the values shown by
 the provisioning script.
 
-You can then check the JWT like so:
+You can then check the generated JWT like so:
 
 ```
 tools/checkJwt.sh -k PUBLIC_KEY_FILE  -t TOKEN
-
 ```
 
 You must pass the appropriate public key file and token here.
@@ -127,7 +121,8 @@ curl -X POST -H content-type:application/x-www-form-urlencoded \
  -d  'grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer&assertion=JWT_HERE'
 ```
 
-You will need to insert the rather long JWT in the ppropriate place. 
+You will need to insert the rather long JWT in the appropriate place.
+Also insert your ORGNAME and ENVNAME as appropriate.
 
 
 ## De-Provisioning the System
