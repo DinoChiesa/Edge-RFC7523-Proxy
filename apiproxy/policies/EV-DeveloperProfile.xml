@@ -1,0 +1,10 @@
+<ExtractVariables name="EV-DeveloperProfile">
+  <Source>AccessEntity.AE-Developer</Source>
+  <VariablePrefix>developer</VariablePrefix>
+  <XMLPayload>
+    <Variable name="email" type="string">
+      <XPath>/Developer/Email</XPath>
+    </Variable>
+
+  </XMLPayload>
+</ExtractVariables>

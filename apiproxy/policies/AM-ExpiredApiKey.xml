@@ -1,0 +1,24 @@
+<AssignMessage name='AM-ExpiredApiKey'>
+    <Remove>
+        <Headers>
+            <Header name='Accept'/>
+            <Header name='user-agent'/>
+            <Header name='Authorization'/>
+            <Header name='Signature'/>
+            <Header name='Date'/>
+            <Header name='Host'/>
+            <Header name='EV-DEVELOPERPROFILE-Powered-By'/>
+            <Header name='EV-DEVELOPERPROFILE-Forwarded-Port'/>
+            <Header name='EV-DEVELOPERPROFILE-Forwarded-Proto'/>
+        </Headers>
+    </Remove>
+    <Set>
+        <Payload contentType='application/json' variablePrefix='{' variableSuffix='}'>
+{ "error" : { "code":152001, "message":"The API Key is expired." } }
+</Payload>
+        <StatusCode>401</StatusCode>
+        <ReasonPhrase>Unauthorized</ReasonPhrase>
+    </Set>
+    <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+    <AssignTo createNew='false' transport='http' type='response'/>
+</AssignMessage>

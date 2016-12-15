@@ -1,0 +1,12 @@
+<PopulateCache name='CP-JwtHash'>
+  <CacheResource>cache1</CacheResource>
+  <Source>assertion_hash</Source>
+  <Scope>Application</Scope>
+  <CacheKey>
+    <Prefix>jwt</Prefix>
+    <KeyFragment ref='assertion_hash' />
+  </CacheKey>
+  <ExpirySettings>
+    <TimeoutInSec ref='duration_variable'>300</TimeoutInSec>
+  </ExpirySettings>
+</PopulateCache>

@@ -1,0 +1,8 @@
+<AssignMessage name='AV-GrantType'>
+  <DisplayName>AV-GrantType</DisplayName>
+  <IgnoreUnresolvedVariables>false</IgnoreUnresolvedVariables>
+  <AssignVariable>
+    <Name>grant_type</Name>
+    <Value>client_credentials</Value>
+  </AssignVariable>
+</AssignMessage>

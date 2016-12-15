@@ -1,0 +1,24 @@
+<AssignMessage name='AM-InvalidApiKey'>
+    <Remove>
+        <Headers>
+            <Header name='Accept'/>
+            <Header name='user-agent'/>
+            <Header name='Authorization'/>
+            <Header name='Signature'/>
+            <Header name='Date'/>
+            <Header name='Host'/>
+            <Header name='X-Powered-By'/>
+            <Header name='X-Forwarded-Port'/>
+            <Header name='X-Forwarded-Proto'/>
+        </Headers>
+    </Remove>
+    <Set>
+        <Payload contentType='application/json'>
+{ "error" : { "code":152000, "message":"Invalid client." } }
+</Payload>
+        <StatusCode>401</StatusCode>
+        <ReasonPhrase>Unauthorized</ReasonPhrase>
+    </Set>
+    <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+    <AssignTo createNew='false' transport='http' type='response'/>
+</AssignMessage>

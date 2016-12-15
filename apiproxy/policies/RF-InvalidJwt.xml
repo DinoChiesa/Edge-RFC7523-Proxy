@@ -1,0 +1,16 @@
+<RaiseFault name='RF-InvalidJwt'>
+  <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+  <FaultResponse>
+    <Set>
+      <Payload contentType='application/json'><![CDATA[{
+  "error" : {
+    "code" : 401.05,
+    "message" : "the JWT is not valid, or is expired, or has been previously used."
+  }
+}
+]]></Payload>
+      <StatusCode>401</StatusCode>
+      <ReasonPhrase>Unauthorized</ReasonPhrase>
+    </Set>
+  </FaultResponse>
+</RaiseFault>

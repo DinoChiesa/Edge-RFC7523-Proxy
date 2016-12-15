@@ -1,0 +1,7 @@
+<BasicAuthentication name='BA-EncodeCC'>
+  <Operation>Encode</Operation>
+  <IgnoreUnresolvedVariables>false</IgnoreUnresolvedVariables>
+  <User ref='assertion_issuer' />
+  <Password ref='extracted_secret' />
+  <AssignTo createNew='false'>request.header.Authorization</AssignTo>
+</BasicAuthentication>

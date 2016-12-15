@@ -1,0 +1,106 @@
+<ProxyEndpoint name='jwt2token'>
+  <Description>Endpoint to exchange JWT for opaque tokens</Description>
+  <HTTPProxyConnection>
+    <BasePath>/rfc7523/jwt2token</BasePath>
+    <VirtualHost>secure</VirtualHost>
+  </HTTPProxyConnection>
+
+  <FaultRules>
+    <FaultRule name='invalid-key'>
+      <Step>
+        <Name>AM-InvalidApiKey</Name>
+      </Step>
+      <Condition>fault.name = "InvalidApiKeyForGivenResource" OR fault.name = "InvalidApiKey" OR fault.name = "DeveloperStatusNotActive" OR fault.name = "invalid_client-app_not_approved"</Condition>
+    </FaultRule>
+
+    <FaultRule name='expired-key'>
+      <Step>
+        <Name>AM-ExpiredApiKey</Name>
+      </Step>
+      <Condition>fault.name = "consumer_key_expired"</Condition>
+    </FaultRule>
+
+  </FaultRules>
+
+  <PreFlow name='PreFlow'>
+      <Request/>
+      <Response/>
+  </PreFlow>
+  <PostFlow name='PostFlow'>
+      <Request/>
+      <Response>
+        <Step><Name>AM-CleanResponseHeaders</Name></Step>
+      </Response>
+  </PostFlow>
+
+  <Flows>
+    <Flow name='token exchange'>
+      <Description>exchange a JWT for an opaque OAuth token</Description>
+      <Request>
+        <Step>
+          <Name>RF-InvalidRequestJwt</Name>
+          <Condition>request.header.content-type != "application/x-www-form-urlencoded"</Condition>
+        </Step>
+        <Step>
+          <Name>RF-InvalidRequestJwt</Name>
+          <Condition>request.formparam.grant_type != "urn:ietf:params:oauth:grant-type:jwt-bearer"</Condition>
+        </Step>
+        <Step>
+          <Name>RF-InvalidRequestJwt</Name>
+          <Condition>request.formparam.assertion = "null"</Condition>
+        </Step>
+        <Step><Name>JS-HashJwt</Name></Step>
+        <Step><Name>CL-JwtHash</Name></Step>
+        <Step>
+          <Name>RF-InvalidJwt</Name>
+          <Condition>lookupcache.CL-JwtHash.cachehit = true</Condition>
+        </Step>
+
+        <Step><Name>JS-ExtractIssuer</Name></Step>
+
+        <!-- the issuer is the API Key. Verify it. -->
+        <Step><Name>VerifyAPIKey-1</Name></Step>
+
+        <Step><Name>AE-Developer</Name></Step>
+        <Step><Name>EV-DeveloperProfile</Name></Step>
+        <Step><Name>AE-App</Name></Step>
+        <Step><Name>EV-ConsumerSecret</Name></Step>
+
+        <Step><Name>JWT-ParseAssertion</Name></Step>
+
+        <Step>
+          <Name>RF-InvalidJwt</Name>
+          <Condition>(jwt_isExpired = true) OR (jwt_isValid = false)</Condition>
+        </Step>
+
+        <Step>
+          <Name>RF-InvalidExpiry</Name>
+          <Condition>jwt_expiresin > 300</Condition>
+        </Step>
+
+      </Request>
+
+      <Response>
+        <Step><Name>CP-JwtHash</Name></Step>
+        <Step><Name>BA-EncodeCC</Name></Step>
+        <Step><Name>AV-GrantType</Name></Step>
+        <Step><Name>OAuthV2-GenerateAccessToken-CC1</Name></Step>
+        <Step><Name>JS-GroomTokenResponse</Name></Step>
+      </Response>
+
+      <Condition>(proxy.pathsuffix MatchesPath "/token") and (request.verb = "POST")</Condition>
+    </Flow>
+
+    <Flow name='unknown request'>
+      <Request>
+        <Step><Name>RF-UnknownRequest</Name></Step>
+      </Request>
+      <Response/>
+    </Flow>
+
+  </Flows>
+
+  <!-- keep this if no target (eg, for oauth token generation and refresh) -->
+  <RouteRule name='NoRouteRule'/>
+
+</ProxyEndpoint>

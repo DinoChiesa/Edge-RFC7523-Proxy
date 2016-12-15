@@ -1,0 +1,7 @@
+<Javascript name='JS-HashJwt' timeLimit='200' >
+  <Properties>
+    <Property name='jwtvar'>request.formparam.assertion</Property>
+    <Property name='outputvar'>assertion_hash</Property>
+  </Properties>
+  <ResourceURL>jsc://hashJwt.js</ResourceURL>
+</Javascript>

@@ -1,0 +1,26 @@
+<RaiseFault name='RF-InvalidRequestJwt'>
+  <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+  <FaultResponse>
+    <Set>
+      <Payload contentType='application/json'><![CDATA[{
+  "error" : {
+    "code" : 400.02,
+    "message" : "that request was invalid.",
+    "detail" : {
+      "message" : "You must pass a JWT as a formparam. It should be signed with your private key using RS256",
+      "example_claimset" : {
+        "iss":"API_KEY",
+        "scope":"https://www.example.com/apitechforum.readonly",
+        "aud":"https://www.cap500.com/apitechform/token",
+        "exp":1328554385,
+        "iat":1328550785
+       }
+    }
+  }
+}
+]]></Payload>
+      <StatusCode>400</StatusCode>
+      <ReasonPhrase>Bad Request</ReasonPhrase>
+    </Set>
+  </FaultResponse>
+</RaiseFault>
