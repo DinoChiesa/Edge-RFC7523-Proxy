@@ -134,6 +134,9 @@ tools/provisionKeysProxyProductDeveloperAndApp.sh   -o ORGNAME  -e ENVNAME -r
 
 ```
 
+## See Also
+
+A [similar project by Nandan](https://github.com/srinandan/rfc7523-jwt-profile), which uses a JavaScript-based token verifier in the Edge Proxy.
 
 
 ## Copyright and License
