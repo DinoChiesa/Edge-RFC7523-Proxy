@@ -1,5 +1,5 @@
 <PopulateCache name='CP-JwtHash'>
-  <CacheResource>cache1</CacheResource>
+  <CacheResource>rfc7523-cache</CacheResource>
   <Source>assertion_hash</Source>
   <Scope>Application</Scope>
   <CacheKey>

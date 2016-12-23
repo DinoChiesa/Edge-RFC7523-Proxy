@@ -1,5 +1,5 @@
 <LookupCache name='CL-JwtHash'>
-  <CacheResource>cache1</CacheResource>
+  <CacheResource>rfc7523-cache</CacheResource>
   <AssignTo>cached_jwthash</AssignTo>
   <Scope>Application</Scope>
   <CacheKey>

@@ -6,7 +6,7 @@
 # A bash script for provisioning a proxy, a product, a developer and a developer app on
 # an organization in the Apigee Edge Gateway. This supports the RFC7523 example. 
 #
-# Last saved: <2016-December-14 21:02:01>
+# Last saved: <2016-December-22 16:17:18>
 #
 
 verbosity=2
@@ -16,6 +16,7 @@ apiproductname="Rfc7523-Example"
 developerEmail="rfc7523-example-dev@example.com"
 nametag="rfc7523"
 proxyname="rfc7523"
+requiredcache="rfc7523-cache"
 defaultmgmtserver="https://api.enterprise.apigee.com"
 netrccreds=0
 resetAll=0
@@ -28,8 +29,8 @@ apiproxydir="$(cd "${scriptdir}/../apiproxy";pwd)"
 usage() {
   local CMD=`basename $0`
   echo "$CMD: "
-  echo "  Creates a Developer and a Developer app for a given API Product." 
-  echo "  Emits the client id and secret."
+  echo "  Creates keys, imports and deploys a proxy, creates an API Product, a Developer and a"
+  echo "  Developer app for the API Product.  Emits the client id and secret."
   echo "  Uses the curl utility."
   echo "usage: "
   echo "  $CMD [options] "
@@ -132,6 +133,82 @@ random_string() {
 }
 
 
+verify_or_create_cache() {
+  local wantedcache existingcache ttl c exists
+
+  [[ $verbosity -gt 0 ]] && echo "check for existing caches..."
+  MYCURL -X GET ${mgmtserver}/v1/o/${orgname}/e/${envname}/caches/
+  if [[ ${CURL_RC} -ne 200 ]]; then
+    echo 
+    echoerror "Cannot retrieve caches for that environment..."
+    echo
+    echo CURL_RC = ${CURL_RC}
+    echo
+    cat ${CURL_OUT}
+    CleanUp
+    exit 1
+  fi
+
+  c=$(cat ${CURL_OUT} | grep "\[" | sed -E 's/[]",[]//g')
+  IFS=' '; declare -a cachearray=($c)
+
+  # trim spaces
+  wantedcache="$(echo "${requiredcache}" | tr -d '[[:space:]]')"
+  exists=0
+  for i in "${!cachearray[@]}" ; do
+    existingcache="${cachearray[i]}"
+    echo "found cache: ${existingcache}"
+    if [[ "$wantedcache" = "$existingcache" ]] ; then
+      exists=1
+    fi
+  done
+
+  if [[ $exists -eq 0 ]]; then 
+    echo "creating the cache \"$wantedcache\"..."
+    MYCURL -X POST -H Content-type:application/json \
+      "${mgmtserver}/v1/o/${orgname}/e/${envname}/caches?name=$wantedcache" \
+      -d '{
+        "compression": {
+          "minimumSizeInKB": 1024
+        },
+        "distributed" : true,
+        "description": "cache supporting nonce mgmt in the HttpSig proxy",
+        "diskSizeInMB": 0,
+        "expirySettings": {
+          "timeoutInSec" : {
+            "value" : 86400
+          },
+          "valuesNull": false
+        },
+        "inMemorySizeInKB": 8000,
+        "maxElementsInMemory": 3000000,
+        "maxElementsOnDisk": 1000,
+        "overflowToDisk": false,
+        "persistent": false,
+        "skipCacheIfElementSizeInKBExceeds": "12"
+      }'
+    if [[ ${CURL_RC} -eq 409 ]]; then
+      ## should have caught this above, but just in case
+      echo
+      echo "That cache already exists."
+    elif [ ${CURL_RC} -ne 201 ]; then
+      echo
+      echoerror "failed creating the cache."
+      echo
+      echo CURL_RC = ${CURL_RC}
+      echo
+      cat ${CURL_OUT}
+      echo
+      CleanUp
+      echo
+      exit 1
+    fi
+  else
+      [[ $verbosity -gt 0 ]] && echo "A-OK: the needed cache, $wantedcache, exists..."
+  fi
+}
+
+
 produce_proxy_zip() {
     local curdir=$(pwd) zipout r=$(random_string) destzip
     destzip="/tmp/${nametag}.apiproxy.${r}.zip"
@@ -160,7 +237,6 @@ produce_proxy_zip() {
     
     apiproxyzip="${destzip}"
 }
-
 
 
 import_proxy_bundle() {
@@ -537,21 +613,26 @@ clear_env_state() {
     done
 
     echo "check for the ${proxyname} apiproxy..."
-    MYCURL -X GET "${mgmtserver}/v1/o/${orgname}/apis/${proxyname}/deployments"
+    MYCURL -X GET "${mgmtserver}/v1/o/${orgname}/apis/${proxyname}"
     if [[ ${CURL_RC} -eq 200 ]]; then
-        echo "found, querying it..."
-        parse_deployments_output
+        
+        echo "checking deployments"
+        MYCURL -X GET "${mgmtserver}/v1/o/${orgname}/apis/${proxyname}/deployments"
+        if [[ ${CURL_RC} -eq 200 ]]; then
+            echo "found, querying it..."
+            parse_deployments_output
 
-        # undeploy from any environments in which the proxy is deployed
-        for deployment in ${deployments[@]}; do
-            env=`expr "${deployment}" : '\([^=]*\)'`
-            # trim spaces
-            env="$(echo "${env}" | tr -d '[[:space:]]')"
-            rev=`expr "$deployment" : '[^=]*=\([^=]*\)'`
-            MYCURL -X POST "${mgmtserver}/v1/o/${orgname}/apis/${proxyname}/revisions/${rev}/deployments?action=undeploy&env=${env}"
-            ## ignore errors
-        done
-
+            # undeploy from any environments in which the proxy is deployed
+            for deployment in ${deployments[@]}; do
+                env=`expr "${deployment}" : '\([^=]*\)'`
+                # trim spaces
+                env="$(echo "${env}" | tr -d '[[:space:]]')"
+                rev=`expr "$deployment" : '[^=]*=\([^=]*\)'`
+                MYCURL -X POST "${mgmtserver}/v1/o/${orgname}/apis/${proxyname}/revisions/${rev}/deployments?action=undeploy&env=${env}"
+                ## ignore errors
+            done
+        fi
+        
         # delete all revisions
         MYCURL -X GET ${mgmtserver}/v1/o/${orgname}/apis/${proxyname}/revisions
         revisionarray=(`cat ${CURL_OUT} | grep "\[" | sed -E 's/[]",[]//g'`)
@@ -579,6 +660,21 @@ clear_env_state() {
             echo
         fi 
     fi
+
+    [[ $verbosity -gt 0 ]] && echo "checking for the cache ${requiredcache}"
+    MYCURL -X GET ${mgmtserver}/v1/o/${orgname}/e/${envname}/caches/${requiredcache}
+    if [[ ${CURL_RC} -eq 200 ]]; then
+        MYCURL -X DELETE ${mgmtserver}/v1/o/${orgname}/e/${envname}/caches/${requiredcache}
+        if [[ ${CURL_RC} -ne 200 ]]; then
+            echo "failed to delete the cache"
+            echo
+            echo CURL_RC = ${CURL_RC}
+            echo
+            cat ${CURL_OUT}
+            echo
+        fi 
+    fi
+
 }
 
 reset_all() {
@@ -657,6 +753,8 @@ if [[ $resetAll -eq 1 ]]; then
 else 
     verify_or_create_rsa_key_pair
 
+    verify_or_create_cache
+    
     produce_proxy_zip
 
     [[ ! -f "${apiproxyzip}" ]] && echo "no API proxy zip" && exit 1
