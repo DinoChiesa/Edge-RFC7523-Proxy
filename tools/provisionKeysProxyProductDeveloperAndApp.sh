@@ -6,7 +6,7 @@
 # A bash script for provisioning a proxy, a product, a developer and a developer app on
 # an organization in the Apigee Edge Gateway. This supports the RFC7523 example. 
 #
-# Last saved: <2016-December-22 16:17:18>
+# Last saved: <2016-December-22 16:20:49>
 #
 
 verbosity=2
@@ -677,17 +677,6 @@ clear_env_state() {
 
 }
 
-reset_all() {
-
-    [[ $verbosity -gt 0 ]] && echo "delete all apps like ${nametag}"
-    
-    
-    [[ $verbosity -gt 0 ]] && echo "delete the api"
-    MYCURL -X DELETE ${mgmtserver}/v1/o/${orgname}/apis/${proxyname}
-    if [[ ${CURL_RC} -ne 200 ]]; then
-        echo "failed to delete that API"
-    fi 
-}
 
 
 ## =======================================================
