@@ -7,7 +7,7 @@
 // Author: Dino
 // Created Fri Sep 26 10:17:11 2014
 //
-// Last saved: <2016-December-14 18:44:27>
+// Last saved: <2017-August-09 19:14:08>
 // ------------------------------------------------------------------
 //
 // Copyright (c) 2014 Apigee Corp.
@@ -60,7 +60,7 @@ import org.apache.commons.ssl.PKCS8Key;
 
 
 public class JwtTool {
-    private final String optString = "pgvt:c:k:x:"; // getopt style
+    private final String optString = "pgvt:c:k:x:i:"; // getopt style
     private JwtAction jwtAction = JwtAction.NONE;
     private final static JOSEObjectType TYP_JWT = new JOSEObjectType("JWT");
 
@@ -239,6 +239,7 @@ public class JwtTool {
 
         else if (jwtAction == JwtAction.GENERATE) {
             String claimsJson = (String) this.options.get("c");
+            String keyId = (String) this.options.get("i");
 
             if (claimsJson == null) {
                 throw new IllegalStateException("Missing claims payload");
@@ -258,7 +259,9 @@ public class JwtTool {
             RSAPrivateKey privateKey = getPrivateKey(getPrivateKeyBytes(privateKeyFile));
             JWSSigner signer = new RSASSASigner(privateKey);
             JWSAlgorithm jwsAlg = JWSAlgorithm.RS256; // TODO: make selectable
-            JWSHeader h = new JWSHeader.Builder(jwsAlg).type(TYP_JWT).build();
+            JWSHeader.Builder builder = new JWSHeader.Builder(jwsAlg).type(TYP_JWT);
+            if (keyId != null) builder.keyID(keyId);
+            JWSHeader h = builder.build();
             SignedJWT signedJWT = new SignedJWT(h, claims);
             signedJWT.sign(signer);
 
@@ -374,7 +377,7 @@ public class JwtTool {
     public static void usage() {
         System.out.println("JwtToolNimbus: decode a signed JWT, or encode a JWT.\n");
         System.out.println("Parse:     java JwtToolNimbus [-v] -p -t <token> [-k <publickeyfile>]");
-        System.out.println("Generate:  java JwtToolNimbus [-v] -g -c <claimsjson> -k <privatekeyfile> [-x <lifetime>]");
+        System.out.println("Generate:  java JwtToolNimbus [-v] -g -c <claimsjson> -k <privatekeyfile> [-i <id>] [-x <lifetime>]");
     }
 
 
