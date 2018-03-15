@@ -3,7 +3,7 @@
 //
 // Tweaks the generated OAuth token response.
 //
-// last saved: <2016-December-05 21:12:32>
+// last saved: <2018-March-15 10:50:56>
 
 var b1 = JSON.parse(response.content),
     propertiesToRemove = ['status', 'refresh_token_status',
@@ -60,15 +60,14 @@ if (b1.access_token) {
     b1.refresh_token_expires = dateFormat(d,dateFormatString);
   }
 
-  // parse and rename the "api_product_list"
-  var list = b1.api_product_list;
-  if (list) {
-    list = list.slice(1, -1);
-    b1.api_products = list.split(',');
-    delete b1.api_product_list;
-  }
+  delete b1.api_product_list;
+  delete b1.api_product_list_json;
+  delete b1.client_id;
+  delete b1.application_name;
+  delete b1.grant_type;
+  delete b1["developer.email"];
 
-  b1.note = 'All of this metadata is attached to the token in the OAuth2 token store within Edge.';
+  //b1.note = 'All of this metadata is attached to the token in the OAuth2 token store within Edge.';
   // pretty-print JSON
   context.setVariable('response.content', JSON.stringify(b1, null, 2));
 }

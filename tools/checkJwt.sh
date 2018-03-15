@@ -2,7 +2,7 @@
 # -*- mode:shell-script; coding:utf-8; -*-
 #
 # Created: <Mon Dec  5 17:51:55 2016>
-# Last Updated: <2016-December-14 21:03:02>
+# Last Updated: <2018-March-15 10:54:25>
 #
 
 scriptdir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -26,7 +26,6 @@ function usage() {
   echo
   exit 1
 }
-
 
 while getopts "hk:t:" opt; do
   case $opt in

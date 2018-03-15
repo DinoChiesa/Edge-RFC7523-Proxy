@@ -1,4 +1,4 @@
 <AccessEntity name='AE-Developer'>
   <EntityType value='developer' />
-  <EntityIdentifier type='consumerkey' ref='assertion_issuer' />
+  <EntityIdentifier type='consumerkey' ref='jwt.JWT-Decode.claim.issuer' />
 </AccessEntity>

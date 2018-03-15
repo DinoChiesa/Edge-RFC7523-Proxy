@@ -1,8 +1,0 @@
-<Javascript name='JS-ExtractIssuer' timeLimit='200' >
-  <Properties>
-    <Property name='jwtvar'>request.formparam.assertion</Property>
-    <Property name='outputvar'>assertion_issuer</Property>
-  </Properties>
-  <IncludeURL>jsc://base64codec.js</IncludeURL>
-  <ResourceURL>jsc://extractIssuer.js</ResourceURL>
-</Javascript>

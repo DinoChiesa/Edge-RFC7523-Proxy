@@ -6,7 +6,7 @@
 # A bash script for provisioning a proxy, a product, a developer and a developer app on
 # an organization in the Apigee Edge Gateway. This supports the RFC7523 example. 
 #
-# Last saved: <2016-December-22 16:20:49>
+# Last saved: <2018-March-15 10:54:06>
 #
 
 verbosity=2
@@ -19,6 +19,7 @@ proxyname="rfc7523"
 requiredcache="rfc7523-cache"
 defaultmgmtserver="https://api.enterprise.apigee.com"
 netrccreds=0
+want_deploy=1
 resetAll=0
 credentials=""
 eightDaysInMillseconds=691200000
@@ -44,6 +45,7 @@ usage() {
   echo "  -p prod   optional. api product name.  Default: ${apiproductname}"
   echo "  -r        optional. tells the script to reset everything: delete app, developer, product, proxy."
   echo "  -q        quiet; decrease verbosity by 1"
+  echo "  -S        optional. skip import and deployment of the proxy."
   echo "  -v        verbose; increase verbosity by 1"
   echo
   echo "Current parameter values:"
@@ -418,16 +420,12 @@ verify_public_key() {
         CleanUp
         exit 1
     fi
-
-    ## read in and normalize
-    pubkey=$(<"$publicKeyFile")
-    pubkey=`echo $pubkey | tr '\r\n' ' '`
 }
 
 
 
 create_new_app() {
-    local payload
+    local payload pubkey
     appname=${nametag}-`random_string`
     [[ $verbosity -gt 0 ]] && echo "create a new app (${appname}) for that developer, with authorization for the product..."
 
@@ -440,6 +438,10 @@ create_new_app() {
     payload+=$'    },{\n'
     payload+=$'     "name" : "public_key",\n'
     payload+=$'     "value" : "'
+    ## read in 
+    pubkey=$(<"$publicKeyFile")
+    # remove newlines
+    pubkey=$(echo $pubkey | tr -d '\n')
     payload+="$pubkey"
     payload+=$'"\n'
     payload+=$'    } ],\n'
@@ -681,7 +683,7 @@ clear_env_state() {
 
 ## =======================================================
 
-while getopts "hm:o:e:u:nd:p:qvr" opt; do
+while getopts "hm:o:e:u:nd:p:qvrS" opt; do
   case $opt in
     h) usage ;;
     m) mgmtserver=$OPTARG ;;
@@ -692,6 +694,7 @@ while getopts "hm:o:e:u:nd:p:qvr" opt; do
     p) apiproductname=$OPTARG ;;
     d) developerEmail=$OPTARG ;;
     r) resetAll=1 ;;
+    S) want_deploy=0 ;;
     q) verbosity=$(($verbosity-1)) ;;
     v) verbosity=$(($verbosity+1)) ;;
     *) echo "unknown arg" && usage ;;
@@ -743,19 +746,22 @@ else
     verify_or_create_rsa_key_pair
 
     verify_or_create_cache
-    
-    produce_proxy_zip
 
-    [[ ! -f "${apiproxyzip}" ]] && echo "no API proxy zip" && exit 1
+    if [[ $want_deploy -eq 1 ]]; then
+        produce_proxy_zip
 
-    import_proxy_bundle
+        [[ ! -f "${apiproxyzip}" ]] && echo "no API proxy zip" && exit 1
 
-    [[ ! -n "$importedRevision" ]] && echo "the import failed" && exit 1
+        import_proxy_bundle
 
-    deploy_proxy
+        [[ ! -n "$importedRevision" ]] && echo "the import failed" && exit 1
+
+        deploy_proxy
+    fi
 
     verify_or_create_api_product
     verify_or_create_developer
+    
     verify_public_key
     create_new_app
     retrieve_app_keys

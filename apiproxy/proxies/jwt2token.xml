@@ -50,13 +50,15 @@
           <Condition>request.formparam.assertion = "null"</Condition>
         </Step>
         <Step><Name>JS-HashJwt</Name></Step>
+        <!-- lookup this JWT in the cache, to see if it has been presented previously. -->
         <Step><Name>CL-JwtHash</Name></Step>
         <Step>
           <Name>RF-InvalidJwt</Name>
           <Condition>lookupcache.CL-JwtHash.cachehit = true</Condition>
         </Step>
 
-        <Step><Name>JS-ExtractIssuer</Name></Step>
+        <!-- decode to get the issuer -->
+        <Step><Name>JWT-Decode</Name></Step>
 
         <!-- the issuer is the API Key. Verify it. -->
         <Step><Name>VerifyAPIKey-1</Name></Step>
@@ -64,9 +66,9 @@
         <Step><Name>AE-Developer</Name></Step>
         <Step><Name>EV-DeveloperProfile</Name></Step>
         <Step><Name>AE-App</Name></Step>
-        <Step><Name>EV-ConsumerSecret</Name></Step>
+        <Step><Name>EV-PublicKey</Name></Step>
 
-        <Step><Name>JWT-ParseAssertion</Name></Step>
+        <Step><Name>JWT-VerifyAssertion</Name></Step>
 
         <Step>
           <Name>RF-InvalidJwt</Name>
@@ -81,6 +83,8 @@
       </Request>
 
       <Response>
+        <!-- populate the cache with this JWT, so that we won't accept
+             it again -->
         <Step><Name>CP-JwtHash</Name></Step>
         <Step><Name>BA-EncodeCC</Name></Step>
         <Step><Name>AV-GrantType</Name></Step>

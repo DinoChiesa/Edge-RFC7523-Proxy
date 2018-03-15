@@ -1,5 +1,5 @@
 <VerifyAPIKey name='VerifyAPIKey-1'>
-  <APIKey ref='assertion_issuer'></APIKey>
+  <APIKey ref='jwt.JWT-Decode.claim.issuer'></APIKey>
   <!--
       Variables populated by this policy: verifyapikey.{policy_name}.
 

@@ -2,7 +2,7 @@
 # -*- mode:shell-script; coding:utf-8; -*-
 #
 # Created: <Mon Dec  5 17:51:55 2016>
-# Last Updated: <2017-January-30 10:56:49>
+# Last Updated: <2018-March-15 09:44:33>
 #
 
 scriptdir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -33,7 +33,6 @@ function usage() {
   echo
   exit 1
 }
-
 
 while getopts "hk:i:x:e:o:a:s:" opt; do
   case $opt in
@@ -67,6 +66,8 @@ claims+=$'"\n}'
 
 echo "claims: "
 echo "${claims}"
+
+[[ ! -f "$tooldir/jwt-tool.jar" ]] && $(cd jwttool; mvn clean package; cd ..)
 
 jwt=$(java -classpath "$tooldir/jwt-tool.jar:$tooldir/lib/*" com.google.examples.JwtTool -g -k ${privateKey} -c "${claims}" -x ${expiry})
 

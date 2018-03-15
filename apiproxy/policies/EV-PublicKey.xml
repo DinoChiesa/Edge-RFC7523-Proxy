@@ -1,4 +1,4 @@
-<ExtractVariables name='EV-ConsumerSecret'>
+<ExtractVariables name='EV-PublicKey'>
   <Source>AccessEntity.AE-App</Source>
   <XMLPayload>
     <Variable name='extracted_secret' type='string'>

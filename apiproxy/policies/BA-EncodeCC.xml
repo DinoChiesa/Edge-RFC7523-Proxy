@@ -1,7 +1,8 @@
 <BasicAuthentication name='BA-EncodeCC'>
+  <!-- need this for for the OAuthV2 GenerateAccessToken policy -->
   <Operation>Encode</Operation>
   <IgnoreUnresolvedVariables>false</IgnoreUnresolvedVariables>
-  <User ref='assertion_issuer' />
+  <User ref='jwt.JWT-Decode.claim.issuer' />
   <Password ref='extracted_secret' />
   <AssignTo createNew='false'>request.header.Authorization</AssignTo>
 </BasicAuthentication>

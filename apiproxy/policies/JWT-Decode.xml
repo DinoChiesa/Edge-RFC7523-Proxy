@@ -1,0 +1,4 @@
+<DecodeJWT name='JWT-Decode'>
+  <!-- this policy decodes the JWT and sets appropriate context variables -->
+  <Source>request.formparam.assertion</Source>
+</DecodeJWT>
