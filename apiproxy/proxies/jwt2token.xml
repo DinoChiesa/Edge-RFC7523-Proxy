@@ -77,7 +77,7 @@
 
         <Step>
           <Name>RF-InvalidExpiry</Name>
-          <Condition>jwt_expiresin > 300</Condition>
+          <Condition>jwt.JWT-VerifyAssertion.seconds_remaining > 300</Condition>
         </Step>
 
       </Request>
