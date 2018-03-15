@@ -85,7 +85,7 @@ The check for validity involves:
 To provision the keys, the developer, the product, and the app, run the provisioning script, like the following:
 
 ```
-tools/provisionKeysProxyProductDeveloperAndApp.sh   -o ORGNAME  -e ENVNAME
+tools/provisionKeysProxyProductDeveloperAndApp.sh   -o ${ORG}  -e ${ENV}
 ```
 
 Specify your organization name and environment name as appropriate.
@@ -106,7 +106,7 @@ It will create a keypair, or re-use an existing keypair if there is a unique one
 If you want to skip import and deploy of the proxy, you can pass the `-S` option.
 
 ```
-tools/provisionKeysProxyProductDeveloperAndApp.sh   -o ORGNAME  -e ENVNAME -S
+tools/provisionKeysProxyProductDeveloperAndApp.sh   -o ${ORG}  -e ${ENV} -S
 ```
 
 The above will create a new app and upload a new public key.
@@ -142,16 +142,16 @@ You must pass the appropriate public key file and token here.
 
 ## Invoking the Proxy to Perform the Exchange
 
-Use this command:
+Use a command like this:
 
 ```
 curl -X POST -H content-type:application/x-www-form-urlencoded \
-  https://ORGNAME-ENVNAME.apigee.net/rfc7523/jwt2token/token \
- -d  'grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer&assertion=JWT_HERE'
+  https://${ORG}-${ENV}.apigee.net/rfc7523/jwt2token/token \
+ -d  "grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer&assertion=${JWT}"
 ```
 
 You will need to insert the rather long JWT in the appropriate place.
-Also insert your ORGNAME and ENVNAME as appropriate.
+Also insert your ORG and ENV as appropriate.
 
 
 ## Deleting the Provisioned artifacts from the System
@@ -159,7 +159,7 @@ Also insert your ORGNAME and ENVNAME as appropriate.
 To remove the developer, the product, and the app, the cache, and the proxy, run the provisioning script with the -r option, like the following:
 
 ```
-tools/provisionKeysProxyProductDeveloperAndApp.sh   -o ORGNAME  -e ENVNAME -r
+tools/provisionKeysProxyProductDeveloperAndApp.sh   -o ${ORG}  -e ${ENV} -r
 
 ```
 
