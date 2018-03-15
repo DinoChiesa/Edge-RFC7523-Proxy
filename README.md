@@ -2,7 +2,7 @@
 
 This API Proxy bundle demonstrates token exchange - JWT for an opaque OAuth token as decribed by [IETF RFC 7523](https://tools.ietf.org/html/rfc7523).
 
-This is the token exchange process employed [by Google for service-to-service invocation](https://developers.google.com/identity/protocols/OAuth2ServiceAccount) of various commercial APIs, such as Stackdriver, Drive, DLP, and so on.  [Google Assitant](https://developers.google.com/actions/identity/oauth2-assertion-flow) also uses this flow to obtain tokens from external systems.
+This is the token exchange process employed [by Google for service-to-service invocation](https://developers.google.com/identity/protocols/OAuth2ServiceAccount) of various commercial APIs, such as Stackdriver, Drive, DLP, and so on.  [Google Assistant](https://developers.google.com/actions/identity/oauth2-assertion-flow) also uses this flow to obtain tokens from external systems.
 
 This example shows you how you can implement this flow within your Apigee organization, to facilitate integration with Google Assistant, or to allow other third-party apps to authenticate securely.
 
