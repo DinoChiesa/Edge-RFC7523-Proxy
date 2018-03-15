@@ -2,28 +2,20 @@
   <Algorithm>RS256</Algorithm>
   <Source>request.formparam.assertion</Source>
   <IgnoreUnresolvedVariables>false</IgnoreUnresolvedVariables>
-<!--
-  <PublicKey>
-    <Value>
-      - - - - -BEGIN PUBLIC KEY- - - - -
-      MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAq/c4uCIU3UVFy7ezonkJ
-      WVp2HkyZutia5Vg3T6lnWMySLeux34pWEiQdnNomWJvxY1wUc3PDUD8m4dF86Lvd
-      Vr9dXisYtWpoaxy+nLGWmkSXv3pv77OfpEmaESbDEN4NlrQQsqnHH21fr8IQGp1e
-      IetYOcUkBl97QXETV7fS5gSM2PuqMh7PNKeQot9LAf+0ANLzpCXa7Tx26TXoib2C
-      RG5wD2+JDp3wlQtDTmNaHDgz7GDB1HsLYLY+JEFEi0hPY0zzUwxoH8UTlQmHHHWy
-      5ewmAAQZ3yasIG0csDM38nKSHcZJMorg3tcJzO/7RS+a/sU8oEJWLkUcGawM33cc
-      CQIDAQAB
-      - - - - -END PUBLIC KEY- - - - -
-    </Value>
-  </PublicKey>
--->
+
+  <!-- this is the public key extracted from the app metadata -->
   <PublicKey>
     <Value ref='public_key'/>
   </PublicKey>
-<!--
-  <Issuer ref='assertion_issuer'/>
--->
+
+  <!-- it's redundant to verify the issuer. The flow logic extracted
+       it earlier (in the Decode step), and called VerifyApiKey on it. -->
+  <!--  <Issuer ref='assertion_issuer'/> unnecessary -->
+
+  <!-- the audience in this case is "ME" - the Apigee Edge proxy -->
   <Audience>urn://www.apigee.com/apitechforum/token</Audience>
+
+  <!-- the scope obvs is optional. Can be whatever is appropriate. -->
   <AdditionalClaims>
     <Claim name='scope'>urn://www.apigee.com/apitechforum.readonly</Claim>
   </AdditionalClaims>
