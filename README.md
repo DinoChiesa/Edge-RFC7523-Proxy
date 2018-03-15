@@ -66,26 +66,27 @@ does not transmit secrets.
 Here's how the thing works:
 * There must be a developer entity registered in Edge
 * There must be an API product in Apigee Edge
-* There must be an app for the developr, authorized on the API Product
-* The app must have a custom attribute named "public_key", and its contents must be the PEM/PKCS8 encoding of a public key.
-* The app (or client) must generate a JWT, which is signed with the corresponding private key
+* There must be an app registered for the developer, authorized on the API Product
+* The registered app must have a custom attribute named "public_key", and its contents must be the PEM/PKCS8 encoding of a public key. Delete the newlines prior to storing the PEM string, but include the beginning and ending stanzas (`-----BEGIN PUBLIC KEY-----` and etc ).
+* The client must generate a JWT, which is signed with the corresponding private key
 * The app sends in the JWT to request an opaque token
 * Apigee Edge checks the JWT, and issues the token if everything is valid
 
 The check for validity involves:
 * The issuer must be a valid API Key registered in Apigee Edge. Not expired nor revoked.
 * The total lifetime of the JWT must be no longer than 5 minutes.
-* The issued-at time must be valid.  The not-before-time, if it exists, must be valid.
+* The issued-at time must be valid. The not-before-time, if it exists, must be valid.
 * The signature is correct.
 * The JWT cannot have been used previously.  (Edge keeps a cache. )
 
 
 ## Provisioning the System
 
-To provision the keys, the developer, the product, and the app, run the provisioning script, like the following:
+The good news is, there's a provisioning script that helps you create all the things required as described above.
+To provision the keys, the developer, the product, and the app, and the keypair, run the provisioning script, like so:
 
 ```
-tools/provisionKeysProxyProductDeveloperAndApp.sh   -o ${ORG}  -e ${ENV}
+tools/provisionKeysProxyProductDeveloperAndApp.sh  -o ${ORG}  -e ${ENV}
 ```
 
 Specify your organization name and environment name as appropriate.
