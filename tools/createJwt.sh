@@ -2,7 +2,7 @@
 # -*- mode:shell-script; coding:utf-8; -*-
 #
 # Created: <Mon Dec  5 17:51:55 2016>
-# Last Updated: <2018-March-15 09:44:33>
+# Last Updated: <2018-March-15 13:10:33>
 #
 
 scriptdir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -79,7 +79,11 @@ echo
 echo
 echo "To use the JWT:"
 echo
+
+[ $orgname == "ORGNAME" ] && orgname="\${ORG}"
+[ $envname == "ENVNAME" ] && envname="\${ENV}"
+
 echo "curl -X POST -H content-type:application/x-www-form-urlencoded \\"
 echo "    https://${orgname}-${envname}.apigee.net/rfc7523/jwt2token/token \\"
 printf "    -d  'grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer&assertion=%s'" $jwt
-  
+
