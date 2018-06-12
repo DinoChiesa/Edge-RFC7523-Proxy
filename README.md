@@ -166,5 +166,5 @@ tools/provisionKeysProxyProductDeveloperAndApp.sh   -o ${ORG}  -e ${ENV} -r
 
 ## Copyright and License
 
-This material is Copyright (c) 2016-2018 Google, Inc.
+This material is [Copyright (c) 2016-2018 Google, LLC.](NOTICE)
 and is licensed under the [Apache 2.0 License](LICENSE).
