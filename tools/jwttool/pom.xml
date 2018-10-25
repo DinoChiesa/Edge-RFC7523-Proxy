@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.google.examples</groupId>
   <artifactId>jwt-tool</artifactId>
-  <version>1.0.1</version>
+  <version>1.0.3</version>
   <name>EdgeHelperJwtTool</name>
   <url>http://maven.apache.org</url>
   <packaging>jar</packaging>
@@ -13,13 +13,28 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <java.version>1.8</java.version>
+    <bouncycastle.version>1.59</bouncycastle.version>
+    <commons-lang3.version>3.7</commons-lang3.version>
+    <json-smart.version>1.3.1</json-smart.version>
+    <nimbus-jose-jwt.version>6.1.1</nimbus-jose-jwt.version>
   </properties>
 
   <dependencies>
     <dependency>
-        <groupId>commons-lang</groupId>
-        <artifactId>commons-lang</artifactId>
-        <version>2.6</version>
+      <groupId>org.bouncycastle</groupId>
+      <artifactId>bcprov-jdk15on</artifactId>
+      <version>${bouncycastle.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.bouncycastle</groupId>
+      <artifactId>bcpkix-jdk15on</artifactId>
+      <version>${bouncycastle.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>${commons-lang3.version}</version>
     </dependency>
 
     <dependency>
@@ -28,22 +43,24 @@
         <version>1.7</version>
     </dependency>
 
+<!--
     <dependency>
       <groupId>ca.juliusdavies</groupId>
       <artifactId>not-yet-commons-ssl</artifactId>
       <version>0.3.9</version>
     </dependency>
+-->
 
     <dependency>
       <groupId>net.minidev</groupId>
       <artifactId>json-smart</artifactId>
-      <version>1.3</version>
+      <version>${json-smart.version}</version>
     </dependency>
 
     <dependency>
       <groupId>com.nimbusds</groupId>
       <artifactId>nimbus-jose-jwt</artifactId>
-      <version>3.10</version>
+      <version>${nimbus-jose-jwt.version}</version>
     </dependency>
 
   </dependencies>
