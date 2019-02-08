@@ -73,10 +73,11 @@ is the pattern used by APIs for most public Google services.
 You might also ask: _Why not just use a client-credentials grant, as described
 in [the OAuth Standard (RFC 6749)](https://tools.ietf.org/html/rfc6749)?_
 
-The reason to rely on a signed JWT in the beginning is to avoid sending secrets across
-the network. A client_secret is a secret, and in OAuth Client Credentials grant, the
-client must send that secret to the server. With the JWT bearer (RFC 7523) grant, the client
-does not transmit secrets.
+The reason to rely on a signed JWT in the beginning is to avoid sending secrets
+across the network. A client_secret is a secret, and in OAuth Client Credentials
+grant, the client must send that secret to the server. With the JWT bearer (RFC
+7523) grant, the client does not transmit secrets. Instead it transmits a
+digital signature which amounts to a proof of possession of the private key.
 
 
 ## The Token Exchange Logic
@@ -100,8 +101,10 @@ The check for validity involves:
 
 ## Provisioning the System
 
-The good news is, there's a provisioning script that helps you create all the things required as described above.
-To provision the keys, the developer, the product, and the app, and the keypair, run the provisioning script, like so:
+The good news is, there's a provisioning script that helps you create all the
+things required as described above. To provision the proxy, the developer, the
+product, and the app, and the associated keypair, run the provisioning script,
+like so:
 
 ```
 tools/provisionKeysProxyProductDeveloperAndApp.sh  -o ${ORG}  -e ${ENV}
@@ -109,7 +112,7 @@ tools/provisionKeysProxyProductDeveloperAndApp.sh  -o ${ORG}  -e ${ENV}
 
 Specify your organization name and environment name as appropriate.
 
-The output will finish something like:
+The output will finish and emit a message like this:
 
 ```
 private key file: private-pkcs8-20161214-201107.pem
@@ -119,7 +122,7 @@ consumer key: ayBZRVAGlmG8BnbQ0YllkCywvi3Ko9wI
 consumer secret: m9cdAYxXtu3m7Nde
 ```
 
-It will create a keypair, or re-use an existing keypair if there is a unique one.
+It will create an RSA keypair, or re-use an existing keypair if there is a unique one. (Requires openssl)
 
 
 If you want to skip import and deploy of the proxy, you can pass the `-S` option.
