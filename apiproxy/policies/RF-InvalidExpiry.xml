@@ -1,16 +1,16 @@
-<RaiseFault name='RF-InvalidExpiry'>
-  <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
-  <FaultResponse>
-    <Set>
-      <Payload contentType='application/json'><![CDATA[{
+<RaiseFault name="RF-InvalidExpiry">
+    <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+    <FaultResponse>
+        <Set>
+            <Payload contentType="application/json">{
   "error" : {
     "code" : 401.03,
     "message" : "the expiry on the JWT must be less than 300s."
   }
 }
-]]></Payload>
-      <StatusCode>401</StatusCode>
-      <ReasonPhrase>Unauthorized</ReasonPhrase>
-    </Set>
-  </FaultResponse>
+</Payload>
+            <StatusCode>401</StatusCode>
+            <ReasonPhrase>Unauthorized</ReasonPhrase>
+        </Set>
+    </FaultResponse>
 </RaiseFault>

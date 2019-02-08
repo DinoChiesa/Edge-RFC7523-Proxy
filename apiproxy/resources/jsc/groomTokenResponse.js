@@ -3,7 +3,7 @@
 //
 // Tweaks the generated OAuth token response.
 //
-// last saved: <2018-March-15 10:50:56>
+// last saved: <2019-February-07 17:05:54>
 
 var b1 = JSON.parse(response.content),
     propertiesToRemove = ['status', 'refresh_token_status',
@@ -60,8 +60,8 @@ if (b1.access_token) {
     b1.refresh_token_expires = dateFormat(d,dateFormatString);
   }
 
-  delete b1.api_product_list;
-  delete b1.api_product_list_json;
+  //delete b1.api_product_list;
+  //delete b1.api_product_list_json;
   delete b1.client_id;
   delete b1.application_name;
   delete b1.grant_type;

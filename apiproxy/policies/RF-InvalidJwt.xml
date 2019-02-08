@@ -2,13 +2,13 @@
   <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
   <FaultResponse>
     <Set>
-      <Payload contentType='application/json'><![CDATA[{
+      <Payload contentType='application/json'>{
   "error" : {
     "code" : 401.05,
     "message" : "the JWT is not valid, or is expired, or has been previously used."
   }
 }
-]]></Payload>
+</Payload>
       <StatusCode>401</StatusCode>
       <ReasonPhrase>Unauthorized</ReasonPhrase>
     </Set>

@@ -6,7 +6,7 @@
 # A bash script for provisioning a proxy, a product, a developer and a developer app on
 # an organization in the Apigee Edge Gateway. This supports the RFC7523 example. 
 #
-# Last saved: <2018-March-15 10:54:06>
+# Last saved: <2019-February-07 17:30:23>
 #
 
 verbosity=2
@@ -516,17 +516,12 @@ parse_deployments_output() {
     output_parsed=$(cat ${CURL_OUT} | grep -A 6 -B 2 "revision")
 
     if [ $? -eq 0 ]; then
-
         deployed_envs=`echo "${output_parsed}" | grep -B 2 revision | grep name | sed -E 's/[\",]//g'| sed -E 's/name ://g'`
-
         deployed_revs=`echo "${output_parsed}" | grep -A 5 revision | grep name | sed -E 's/[\",]//g'| sed -E 's/name ://g'`
-
         IFS=' '; declare -a rev_array=(${deployed_revs})
         IFS=' '; declare -a env_array=(${deployed_envs})
-
         m=${#rev_array[@]}
         [[ $verbosity -gt 0 ]] && echo "found ${m} deployed revisions"
-
         deployments=()
         let m-=1
         while [ $m -ge 0 ]; do

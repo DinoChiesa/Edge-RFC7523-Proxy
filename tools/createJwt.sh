@@ -2,11 +2,14 @@
 # -*- mode:shell-script; coding:utf-8; -*-
 #
 # Created: <Mon Dec  5 17:51:55 2016>
-# Last Updated: <2018-March-15 13:10:33>
+# Last Updated: <2019-February-07 16:58:06>
 #
 
 scriptdir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-tooldir=${scriptdir}/jwttool/target
+tooldir=jose-tool
+tooltargetdir="${scriptdir}/${tooldir}/target"
+toolversion=20190207
+tooljar="$tooltargetdir/apigee-jose-tool-$toolversion.jar"
 privateKey=""
 issuer=""
 orgname="ORGNAME"
@@ -67,9 +70,14 @@ claims+=$'"\n}'
 echo "claims: "
 echo "${claims}"
 
-[[ ! -f "$tooldir/jwt-tool.jar" ]] && $(cd jwttool; mvn clean package; cd ..)
+if [[ ! -f "$tooljar" ]]; then
+    printf "building...\n"
+    cd ${tooldir};
+    mvn clean package;
+    cd ..
+fi
 
-jwt=$(java -classpath "$tooldir/jwt-tool.jar:$tooldir/lib/*" com.google.examples.JwtTool -g -k ${privateKey} -c "${claims}" -x ${expiry})
+jwt=$(java -classpath "$tooljar:$tooltargetdir/lib/*" com.google.examples.JwtTool -G -A RS256 -k ${privateKey} -c "${claims}" -x ${expiry})
 
 echo
 echo

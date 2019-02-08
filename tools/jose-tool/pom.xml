@@ -4,9 +4,9 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.google.examples</groupId>
-  <artifactId>jwt-tool</artifactId>
-  <version>1.0.3</version>
-  <name>EdgeHelperJwtTool</name>
+  <artifactId>apigee-jose-tool</artifactId>
+  <version>20190207</version>
+  <name>EdgeHelperJoseTool</name>
   <url>http://maven.apache.org</url>
   <packaging>jar</packaging>
   <properties>
@@ -43,14 +43,6 @@
         <version>1.7</version>
     </dependency>
 
-<!--
-    <dependency>
-      <groupId>ca.juliusdavies</groupId>
-      <artifactId>not-yet-commons-ssl</artifactId>
-      <version>0.3.9</version>
-    </dependency>
--->
-
     <dependency>
       <groupId>net.minidev</groupId>
       <artifactId>json-smart</artifactId>
@@ -66,7 +58,7 @@
   </dependencies>
 
   <build>
-    <finalName>${project.artifactId}</finalName>
+    <finalName>${project.artifactId}-${project.version}</finalName>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>

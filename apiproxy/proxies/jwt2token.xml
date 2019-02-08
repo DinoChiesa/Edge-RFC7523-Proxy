@@ -60,14 +60,18 @@
         <!-- decode to get the issuer -->
         <Step><Name>JWT-Decode</Name></Step>
 
-        <!-- the issuer is the API Key. Verify it. -->
-        <Step><Name>VerifyAPIKey-1</Name></Step>
-
-        <Step><Name>AE-Developer</Name></Step>
-        <Step><Name>EV-DeveloperProfile</Name></Step>
+        <!-- the claimed issuer is the API Key. -->
+        <!-- Look it up and retrieve the public key. -->
         <Step><Name>AE-App</Name></Step>
+        <Step>
+          <!-- if no retrieval, the issuer is invalid -->
+          <Name>RF-InvalidJwt</Name>
+          <Condition>AccessEntity.AE-App = null</Condition>
+        </Step>
+
         <Step><Name>EV-PublicKey</Name></Step>
 
+        <!-- now, verify the JWT with the public key. -->
         <Step><Name>JWT-VerifyAssertion</Name></Step>
 
         <Step>
@@ -83,8 +87,12 @@
       </Request>
 
       <Response>
-        <!-- populate the cache with this JWT, so that we won't accept
-             it again -->
+        <!-- cache the hash of this JWT, so that this proxy
+             won't accept it again (within cache TTL).
+             Because the cache TTL is longer than the max life
+             of the JWT, we are safe even if the cache entry
+             expires..
+        -->
         <Step><Name>CP-JwtHash</Name></Step>
         <Step><Name>BA-EncodeCC</Name></Step>
         <Step><Name>AV-GrantType</Name></Step>

@@ -2,7 +2,7 @@
   <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
   <FaultResponse>
     <Set>
-      <Payload contentType='application/json'><![CDATA[{
+      <Payload contentType='application/json'>{
   "error" : {
     "code" : 400.02,
     "message" : "that request was invalid.",
@@ -18,7 +18,7 @@
     }
   }
 }
-]]></Payload>
+</Payload>
       <StatusCode>400</StatusCode>
       <ReasonPhrase>Bad Request</ReasonPhrase>
     </Set>
