@@ -41,16 +41,29 @@ with a `x-www-form-urlencoded` payload that includes:
 * grant_type = `urn:ietf:params:oauth:grant-type:jwt-bearer`
 * assertion = a JWT
 
+The payload of the JWT should look something like this:
+```
+{
+  "aud": "urn://www.example.com/token",
+  "scope": "urn://www.example.com/resource.readonly",
+  "iss": "api-key-goes-here",
+  "exp": 1549663491,
+  "iat": 1549663191
+}
+```
+
 The JWT must:
 * be signed via RS256 using the public key belonging to the developer.
-* have an expiry of no greater than 300s.
+* have an expiry of no greater than 300s _from now_.
 * have never been previously used to obtain a token.
 * have the correct audience and scope and issuer (==consumer key).
 
 If all these checks pass, then the proxy generates a client_credentials oauth
-token and returns it. It has an expiry that you (the proxy designer) can specify
-or alter.  This token can then be used like any other client credentials token
-in Apigee Edge.
+token, for the specified consumer key and with the specified scope, and returns
+it. It has an expiry that you (the proxy designer) can specify or alter (the
+client does not get to choose the expiry of the opaque oauth token). This token
+can then be used like any other OAuth token generated via client credentials
+grant in Apigee Edge.
 
 ## Why?
 
