@@ -2,7 +2,7 @@
 # -*- mode:shell-script; coding:utf-8; -*-
 #
 # Created: <Mon Dec  5 17:51:55 2016>
-# Last Updated: <2019-February-07 16:58:06>
+# Last Updated: <2019-December-03 15:20:32>
 #
 
 scriptdir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -21,7 +21,7 @@ audience="urn://www.apigee.com/apitechforum/token"
 function usage() {
   local CMD=`basename $0`
   echo "$CMD: "
-  echo "  Create a JWT for use with the jwt2token API proxy. "
+  echo "  Create a JWT for use with the rfc7523/oauth API proxy. "
   echo "  Uses the JwtTool Java program."
   echo "usage: "
   echo "  $CMD [options] "
@@ -92,6 +92,6 @@ echo
 [ $envname == "ENVNAME" ] && envname="\${ENV}"
 
 echo "curl -X POST -H content-type:application/x-www-form-urlencoded \\"
-echo "    https://${orgname}-${envname}.apigee.net/rfc7523/jwt2token/token \\"
+echo "    https://${orgname}-${envname}.apigee.net/rfc7523/oauth/token \\"
 printf "    -d  'grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer&assertion=%s'" $jwt
 

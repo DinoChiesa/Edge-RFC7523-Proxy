@@ -1,7 +1,7 @@
-<ProxyEndpoint name='jwt2token'>
+<ProxyEndpoint name='oauth'>
   <Description>Endpoint to exchange JWT for opaque tokens</Description>
   <HTTPProxyConnection>
-    <BasePath>/rfc7523/jwt2token</BasePath>
+    <BasePath>/rfc7523/oauth</BasePath>
     <VirtualHost>secure</VirtualHost>
   </HTTPProxyConnection>
 

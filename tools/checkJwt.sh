@@ -2,11 +2,14 @@
 # -*- mode:shell-script; coding:utf-8; -*-
 #
 # Created: <Mon Dec  5 17:51:55 2016>
-# Last Updated: <2018-March-15 10:54:25>
+# Last Updated: <2019-December-03 15:21:06>
 #
 
 scriptdir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-tooldir=${scriptdir}/jwttool/target
+tooldir=jose-tool
+tooltargetdir="${scriptdir}/${tooldir}/target"
+toolversion=20190207
+tooljar="$tooltargetdir/apigee-jose-tool-$toolversion.jar"
 privateKey=""
 issuer=""
 expiry=300
@@ -16,7 +19,7 @@ audience="urn://www.apigee.com/apitechforum/token"
 function usage() {
   local CMD=`basename $0`
   echo "$CMD: "
-  echo "  Check a JWT for use with the jwt2token API proxy. "
+  echo "  Check a JWT for use with the rfc7523/oauth API proxy. "
   echo "  Uses the JwtTool Java program."
   echo "usage: "
   echo "  $CMD [options] "
@@ -43,7 +46,8 @@ done
 echo
 echo
 
-java -classpath "$tooldir/jwt-tool.jar:$tooldir/lib/*" com.google.examples.JwtTool -p -k ${publicKey} -t "${token}"
+
+jwt=$(java -classpath "$tooljar:$tooltargetdir/lib/*" com.google.examples.JwtTool -p -k ${publicKey} -t "${token}")
 
 echo
 

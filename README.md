@@ -30,13 +30,14 @@ bash shell, and the Java-based tool JwtTool, which is included here. To build
 the Java tool you need maven and JDK8.
 
 
-## The jwt2token Proxy Endpoint
+## The Proxy Endpoint
 
-This endpoint performs the token exchange. The basepath is /rfc7523/jwt2token.
+This endpoint handles requests for token exchange. The basepath is /rfc7523/oauth.
 
-It accepts as input a POST /token
+It accepts as input a `POST /token`
 
-with a `x-www-form-urlencoded` payload that includes:
+with a form-encoded payload (header `Content-Type` must be
+`x-www-form-urlencoded`) which includes:
 
 * grant_type = `urn:ietf:params:oauth:grant-type:jwt-bearer`
 * assertion = a JWT
@@ -152,7 +153,7 @@ The above will create a new app and upload a new public key.
 1. First, build the Java tool that generates the JWT:
 
    ```
-   cd tools/jwttool
+   cd tools/jose-tool
    mvn clean install
    cd ../..
    ```
@@ -181,7 +182,7 @@ Use a command like this:
 
 ```
 curl -X POST -H content-type:application/x-www-form-urlencoded \
-  https://${ORG}-${ENV}.apigee.net/rfc7523/jwt2token/token \
+  https://${ORG}-${ENV}.apigee.net/rfc7523/oauth/token \
  -d  "grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer&assertion=${JWT}"
 ```
 
